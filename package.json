@@ -2,10 +2,10 @@
   "name": "ada-hair-salon-api",
   "version": "1.0.0",
   "description": "API de reservas simple para ADA Hair Salon",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only backend/src/index.ts",
-    "build": "tsc -p tsconfig.json && cp -r backend/src/database backend/dist/database || true",
+    "dev": "ts-node --transpile-only backend/src/index.ts",
+    "build": "cd backend && tsc -p . && cp -r src/database dist/database || echo 'Database copy skipped'",
     "start": "node backend/dist/index.js"
   },
   "dependencies": {
@@ -23,7 +23,6 @@
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20.19.17",
-    "@types/sequelize": "^4.28.20",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.9.2"

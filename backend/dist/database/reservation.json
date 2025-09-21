@@ -1,0 +1,10 @@
+[
+  {
+    "id": 1,
+    "date": "2025-09-20",
+    "time": "10:30",
+    "service": "Corte de cabello",
+    "status": "confirmado",
+    "userId": 1
+  }
+]

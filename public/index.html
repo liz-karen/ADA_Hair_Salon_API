@@ -1,0 +1,40 @@
+// Importamos dependencias necesarias con require (CommonJS)
+const express = require("express");        // Framework para servidor y rutas
+const cors = require("cors");              // Middleware para CORS
+const path = require("path");              // Manejo de rutas de archivos
+require("dotenv").config();                // Variables de entorno
+
+// Importamos rutas
+const userRoutes = require("./routes/users-routes");
+const reservationRoutes = require("./routes/reservations-routes");
+
+// Importamos middleware de errores
+const { errorHandler } = require("./middleware/error-handler");
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// === MIDDLEWARES ===
+app.use(cors());              // Habilita CORS
+app.use(express.json());      // Permite recibir JSON en el body
+
+// === SERVIR FRONTEND ===
+const publicPath = path.join(__dirname, "../../public");
+app.use(express.static(publicPath));
+
+// === RUTAS ===
+app.use("/api/users", userRoutes);
+app.use("/api/reservations", reservationRoutes);
+
+// Ruta raíz → index.html
+app.get("/", (_req: any, res: any) => {
+  res.sendFile(path.join(publicPath, "index.html"));
+});
+
+// Middleware global de errores
+app.use(errorHandler);
+
+// === INICIAR SERVIDOR ===
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+});

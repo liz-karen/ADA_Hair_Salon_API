@@ -1,4 +1,3 @@
-// Modelo sencillo para usuarios (base de datos JSON)
 import fs from 'fs';
 import path from 'path';
 
@@ -6,18 +5,18 @@ import path from 'path';
 const filePath = path.join(__dirname, '..', 'database', 'users.json');
 
 // Leer usuarios (síncrono por simplicidad)
-const readUsers = () => {
+const readUsers = (): any[] => {
   const raw = fs.readFileSync(filePath, 'utf-8');
   return JSON.parse(raw);
 };
 
 // Guardar usuarios
-const saveUsers = (users: any[]) => {
+const saveUsers = (users: any[]): void => {
   fs.writeFileSync(filePath, JSON.stringify(users, null, 2));
 };
 
 // Agregar usuario (se espera password ya hasheada)
-const addUser = (userData: any) => {
+export const addUser = (userData: any): any => {
   const users = readUsers();
   const nextId = users.length > 0 ? users[users.length - 1].id + 1 : 1;
   const newUser = { id: nextId, ...userData };
@@ -27,15 +26,18 @@ const addUser = (userData: any) => {
 };
 
 // Buscar por username
-const findByUsername = (username: string) => {
+export const findByUsername = (username: string): any => {
   const users = readUsers();
   return users.find((u: any) => u.username === username);
 };
 
 // Buscar por id
-const findById = (id: number) => {
+export const findById = (id: number): any => {
   const users = readUsers();
   return users.find((u: any) => u.id === id);
 };
 
-export { readUsers, saveUsers, addUser, findByUsername, findById };
+// Obtener todos los usuarios
+export const getAllUsers = (): any[] => {
+  return readUsers();
+};
