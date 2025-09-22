@@ -1,0 +1,26 @@
+[
+  {
+    "_id": "res001",
+    "date": "2024-12-25",
+    "time": "10:30",
+    "service": "Corte de cabello",
+    "notes": "Corte moderno",
+    "status": "confirmado",
+    "price": 25.00,
+    "userId": "user001",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "_id": "res002",
+    "date": "2024-12-26",
+    "time": "14:00",
+    "service": "Tinte y mechas",
+    "notes": "Color rubio claro",
+    "status": "confirmado",
+    "price": 80.00,
+    "userId": "user001",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  }
+]

@@ -20,7 +20,6 @@ const PORT = process.env.PORT || 3000;
 
 // Middlewares
 app.use(cors());
-
 app.use(express.json());
 
 // Servir archivos est√°ticos
@@ -41,5 +40,7 @@ app.use(errorHandler);
 
 // Iniciamos el servidor
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`Ì∫Ä Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`Ì≥ä Usando base de datos JSON temporal`);
+  console.log(`Ì¥ß Configuraci√≥n MongoDB lista para el futuro`);
 });
