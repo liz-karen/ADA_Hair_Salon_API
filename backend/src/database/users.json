@@ -1,8 +1,24 @@
 [
-    {
-      "id": 1,
-      "username": "Valeria",
-      "password": "ABCD1234"
-    }
-  ]
-  
+  {
+    "_id": "admin001",
+    "username": "admin",
+    "password": "$2b$10$tdLMDJoEC/LzzMzlX3.fJu7OzwcRoDsq.RRd6yDweSQRsp0rcGwlu",
+    "email": "admin@adahairsalon.com",
+    "name": "Administrador",
+    "phone": "1234567890",
+    "role": "admin",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  },
+  {
+    "_id": "user001",
+    "username": "valeria",
+    "password": "$2b$10$YZLlT/0iwgzz69Rt8eVte.pdfrR5lbp5qGwurDu2TwmJhEBKIwMia",
+    "email": "valeria@example.com",
+    "name": "Valeria García",
+    "phone": "0987654321",
+    "role": "user",
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "updatedAt": "2024-01-01T00:00:00.000Z"
+  }
+]

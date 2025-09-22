@@ -1,18 +1,11 @@
 import { Request, Response } from "express";
-import { 
-  getAllReservations, 
-  addReservation, 
-  findReservationById, 
-  updateReservation as updateReservationModel, 
-  deleteReservation 
-} from "../models/reservation-model.js";
+import { reservationModel, IReservation } from "../models/reservation-model";
 
 // Obtener todas las reservas de un usuario
-export const getAllForUser = (req: Request, res: Response): void => {
+export const getAllForUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = (req as any).user.id;
-    const allReservations = getAllReservations();
-    const userReservations = allReservations.filter((r: any) => r.userId === userId);
+    const userReservations = await reservationModel.findByUserId(userId);
     res.json(userReservations);
   } catch (error: any) {
     console.error("Error obteniendo reservas:", error);
@@ -21,12 +14,12 @@ export const getAllForUser = (req: Request, res: Response): void => {
 };
 
 // Obtener una reserva por ID
-export const getById = (req: Request, res: Response): void => {
+export const getById = async (req: Request, res: Response): Promise<void> => {
   try {
-    const id = parseInt(req.params.id);
+    const id = req.params.id;
     const userId = (req as any).user.id;
     
-    const reservation = findReservationById(id);
+    const reservation = await reservationModel.findById(id);
     
     if (!reservation) {
       res.status(404).json({ error: "Reserva no encontrada" });
@@ -47,22 +40,30 @@ export const getById = (req: Request, res: Response): void => {
 };
 
 // Crear una reserva
-export const createReservation = (req: Request, res: Response): void => {
+export const createReservation = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = (req as any).user.id;
-    const { date, time, service, notes } = req.body;
+    const { date, time, service, notes, price } = req.body;
 
     if (!date || !time || !service) {
       res.status(400).json({ error: "Fecha, hora y servicio son requeridos" });
       return;
     }
 
-    const newReservation = addReservation({
+    // Verificar disponibilidad del horario
+    const isAvailable = await reservationModel.isTimeSlotAvailable(date, time);
+    if (!isAvailable) {
+      res.status(400).json({ error: "El horario seleccionado no está disponible" });
+      return;
+    }
+
+    const newReservation = await reservationModel.create({
       date,
       time,
       service,
       notes: notes || "",
-      userId,
+      price: price || undefined,
+      userId: userId,
       status: "confirmado"
     });
 
@@ -74,14 +75,14 @@ export const createReservation = (req: Request, res: Response): void => {
 };
 
 // Actualizar una reserva existente
-export const updateReservation = (req: Request, res: Response): void => {
+export const updateReservation = async (req: Request, res: Response): Promise<void> => {
   try {
-    const id = parseInt(req.params.id);
+    const id = req.params.id;
     const userId = (req as any).user.id;
     const updatedFields = req.body;
 
     // Verificar que la reserva exista y pertenezca al usuario
-    const existingReservation = findReservationById(id);
+    const existingReservation = await reservationModel.findById(id);
     if (!existingReservation) {
       res.status(404).json({ error: "Reserva no encontrada" });
       return;
@@ -92,7 +93,19 @@ export const updateReservation = (req: Request, res: Response): void => {
       return;
     }
 
-    const updatedReservation = updateReservationModel(id, updatedFields);
+    // Si se está cambiando la fecha o hora, verificar disponibilidad
+    if (updatedFields.date || updatedFields.time) {
+      const checkDate = updatedFields.date || existingReservation.date;
+      const checkTime = updatedFields.time || existingReservation.time;
+      
+      const isAvailable = await reservationModel.isTimeSlotAvailable(checkDate, checkTime);
+      if (!isAvailable && (checkDate !== existingReservation.date || checkTime !== existingReservation.time)) {
+        res.status(400).json({ error: "El nuevo horario no está disponible" });
+        return;
+      }
+    }
+
+    const updatedReservation = await reservationModel.findByIdAndUpdate(id, updatedFields);
     if (!updatedReservation) {
       res.status(404).json({ error: "Reserva no encontrada" });
       return;
@@ -106,13 +119,13 @@ export const updateReservation = (req: Request, res: Response): void => {
 };
 
 // Eliminar una reserva
-export const removeReservation = (req: Request, res: Response): void => {
+export const removeReservation = async (req: Request, res: Response): Promise<void> => {
   try {
-    const id = parseInt(req.params.id);
+    const id = req.params.id;
     const userId = (req as any).user.id;
 
     // Verificar que la reserva exista y pertenezca al usuario
-    const existingReservation = findReservationById(id);
+    const existingReservation = await reservationModel.findById(id);
     if (!existingReservation) {
       res.status(404).json({ error: "Reserva no encontrada" });
       return;
@@ -123,7 +136,7 @@ export const removeReservation = (req: Request, res: Response): void => {
       return;
     }
 
-    const success = deleteReservation(id);
+    const success = await reservationModel.findByIdAndDelete(id);
     if (!success) {
       res.status(404).json({ error: "Reserva no encontrada" });
       return;
@@ -132,6 +145,36 @@ export const removeReservation = (req: Request, res: Response): void => {
     res.status(204).send();
   } catch (error: any) {
     console.error("Error eliminando reserva:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+};
+
+// Obtener reservas por fecha (para administradores)
+export const getByDate = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { date } = req.params;
+    const reservations = await reservationModel.findByDate(date);
+    res.json(reservations);
+  } catch (error: any) {
+    console.error("Error obteniendo reservas por fecha:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+};
+
+// Obtener todas las reservas (para administradores)
+export const getAllReservations = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userRole = (req as any).user.role;
+    
+    if (userRole !== 'admin') {
+      res.status(403).json({ error: "No tienes permisos de administrador" });
+      return;
+    }
+
+    const reservations = await reservationModel.find();
+    res.json(reservations);
+  } catch (error: any) {
+    console.error("Error obteniendo todas las reservas:", error);
     res.status(500).json({ error: "Error interno del servidor" });
   }
 };

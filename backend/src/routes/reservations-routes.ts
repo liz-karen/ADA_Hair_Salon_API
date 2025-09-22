@@ -4,17 +4,24 @@ import {
   getById,
   createReservation,
   updateReservation,
-  removeReservation
-} from '../controllers/reservations-controller.js';
-import { authenticateToken } from '../middleware/auth-middleware.js';
-import { validateReservation } from '../middleware/validate-middleware.js';
+  removeReservation,
+  getByDate,
+  getAllReservations
+} from '../controllers/reservations-controller';
+import { authenticateToken } from '../middleware/auth-middleware';
+import { validateReservation } from '../middleware/validate-middleware';
 
 const router = Router();
 
+// Rutas para usuarios autenticados
 router.get('/', authenticateToken, getAllForUser);
 router.get('/:id', authenticateToken, getById);
 router.post('/', authenticateToken, validateReservation, createReservation);
 router.put('/:id', authenticateToken, validateReservation, updateReservation);
 router.delete('/:id', authenticateToken, removeReservation);
+
+// Rutas para administradores
+router.get('/admin/all', authenticateToken, getAllReservations);
+router.get('/admin/date/:date', authenticateToken, getByDate);
 
 export default router;
