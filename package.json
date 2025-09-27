@@ -1,20 +1,23 @@
 {
   "name": "ada-hair-salon-api",
   "version": "1.0.0",
-  "description": "API de reservas simple para ADA Hair Salon",
+  "description": "API de reservas para ADA Hair Salon con JSON temporal y MongoDB configurado",
   "type": "commonjs",
   "scripts": {
     "dev": "ts-node --transpile-only backend/src/index.ts",
-    "build": "cd backend && tsc -p . && cp -r src/database dist/database || echo 'Database copy skipped'",
-    "start": "node backend/dist/index.js"
+    "build": "cd backend && tsc -p .",
+    "start": "node backend/dist/index.js",
+    "generate-passwords": "node scripts/generate-passwords.js"
   },
   "dependencies": {
+    "@types/mongoose": "^5.11.96",
     "bcrypt": "^6.0.0",
     "body-parser": "^2.2.0",
     "cors": "^2.8.5",
     "dotenv": "^16.6.1",
     "express": "^5.1.0",
-    "jsonwebtoken": "^9.0.2"
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.18.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
