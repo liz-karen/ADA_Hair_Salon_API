@@ -1,40 +1,38 @@
-// Importamos dependencias necesarias con require (CommonJS)
-const express = require("express");        // Framework para servidor y rutas
-const cors = require("cors");              // Middleware para CORS
-const path = require("path");              // Manejo de rutas de archivos
-require("dotenv").config();                // Variables de entorno
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ADA Hair Salon</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Encabezado -->
+  <header>
+    <h1>💇‍♀️ ADA Hair Salon</h1>
+    <p>Reserva tu turno online de manera rápida y sencilla</p>
+  </header>
 
-// Importamos rutas
-const userRoutes = require("./routes/users-routes");
-const reservationRoutes = require("./routes/reservations-routes");
+  <!-- Sección de reservas -->
+  <main>
+    <section id="reservation-form">
+      <h2>Haz tu reserva</h2>
+      <form id="formReservation">
+        <input type="text" id="name" placeholder="Tu nombre" required>
+        <input type="email" id="email" placeholder="Tu correo" required>
+        <input type="date" id="date" required>
+        <input type="time" id="time" required>
+        <button type="submit">Reservar</button>
+      </form>
+    </section>
 
-// Importamos middleware de errores
-const { errorHandler } = require("./middleware/error-handler");
+    <section id="reservations-list">
+      <h2>Mis reservas</h2>
+      <ul id="list"></ul>
+    </section>
+  </main>
 
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-// === MIDDLEWARES ===
-app.use(cors());              // Habilita CORS
-app.use(express.json());      // Permite recibir JSON en el body
-
-// === SERVIR FRONTEND ===
-const publicPath = path.join(__dirname, "../../public");
-app.use(express.static(publicPath));
-
-// === RUTAS ===
-app.use("/api/users", userRoutes);
-app.use("/api/reservations", reservationRoutes);
-
-// Ruta raíz → index.html
-app.get("/", (_req: any, res: any) => {
-  res.sendFile(path.join(publicPath, "index.html"));
-});
-
-// Middleware global de errores
-app.use(errorHandler);
-
-// === INICIAR SERVIDOR ===
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
-});
+  <!-- Script -->
+  <script src="script.js"></script>
+</body>
+</html>

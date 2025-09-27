@@ -23,7 +23,7 @@ app.use(cors());
 app.use(express.json());
 
 // Servir archivos estÃ¡ticos
-const publicPath = path.resolve(__dirname, "../public");
+const publicPath = path.resolve(__dirname, "../../public");
 app.use(express.static(publicPath));
 
 // Rutas
@@ -40,7 +40,7 @@ app.use(errorHandler);
 
 // Iniciamos el servidor
 app.listen(PORT, () => {
-  console.log(`íº€ Servidor corriendo en http://localhost:${PORT}`);
-  console.log(`í³Š Usando base de datos JSON temporal`);
-  console.log(`í´§ ConfiguraciÃ³n MongoDB lista para el futuro`);
+  console.log(`ï¿½ï¿½ï¿½ Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`ï¿½ï¿½ï¿½ Usando base de datos JSON temporal`);
+  console.log(`ï¿½ï¿½ï¿½ ConfiguraciÃ³n MongoDB lista para el futuro`);
 });
