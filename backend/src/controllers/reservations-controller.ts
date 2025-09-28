@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
-import { reservationModel, IReservation } from "../models/reservation-model";
+import { Reservation, IReservation } from "../models/Reservation"; // ✅ CORRECTO
 
 // Obtener todas las reservas de un usuario
 export const getAllForUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = (req as any).user.id;
-    const userReservations = await reservationModel.findByUserId(userId);
+    const userReservations = await (Reservation as any).findByUserId(userId);
     res.json(userReservations);
   } catch (error: any) {
     console.error("Error obteniendo reservas:", error);
@@ -19,7 +19,7 @@ export const getById = async (req: Request, res: Response): Promise<void> => {
     const id = req.params.id;
     const userId = (req as any).user.id;
     
-    const reservation = await reservationModel.findById(id);
+    const reservation = await Reservation.findById(id);
     
     if (!reservation) {
       res.status(404).json({ error: "Reserva no encontrada" });
@@ -27,7 +27,7 @@ export const getById = async (req: Request, res: Response): Promise<void> => {
     }
 
     // Verificar que la reserva pertenezca al usuario
-    if (reservation.userId !== userId) {
+    if (reservation.userId.toString() !== userId) {
       res.status(403).json({ error: "No tienes permiso para ver esta reserva" });
       return;
     }
@@ -51,13 +51,13 @@ export const createReservation = async (req: Request, res: Response): Promise<vo
     }
 
     // Verificar disponibilidad del horario
-    const isAvailable = await reservationModel.isTimeSlotAvailable(date, time);
+    const isAvailable = await Reservation.isTimeSlotAvailable(date, time);
     if (!isAvailable) {
       res.status(400).json({ error: "El horario seleccionado no está disponible" });
       return;
     }
 
-    const newReservation = await reservationModel.create({
+    const newReservation = new Reservation({
       date,
       time,
       service,
@@ -66,6 +66,8 @@ export const createReservation = async (req: Request, res: Response): Promise<vo
       userId: userId,
       status: "confirmado"
     });
+
+    await newReservation.save();
 
     res.status(201).json(newReservation);
   } catch (error: any) {
@@ -82,13 +84,13 @@ export const updateReservation = async (req: Request, res: Response): Promise<vo
     const updatedFields = req.body;
 
     // Verificar que la reserva exista y pertenezca al usuario
-    const existingReservation = await reservationModel.findById(id);
+    const existingReservation = await Reservation.findById(id);
     if (!existingReservation) {
       res.status(404).json({ error: "Reserva no encontrada" });
       return;
     }
 
-    if (existingReservation.userId !== userId) {
+    if (existingReservation.userId.toString() !== userId) {
       res.status(403).json({ error: "No tienes permiso para modificar esta reserva" });
       return;
     }
@@ -98,14 +100,19 @@ export const updateReservation = async (req: Request, res: Response): Promise<vo
       const checkDate = updatedFields.date || existingReservation.date;
       const checkTime = updatedFields.time || existingReservation.time;
       
-      const isAvailable = await reservationModel.isTimeSlotAvailable(checkDate, checkTime);
+      const isAvailable = await Reservation.isTimeSlotAvailable(checkDate, checkTime);
       if (!isAvailable && (checkDate !== existingReservation.date || checkTime !== existingReservation.time)) {
         res.status(400).json({ error: "El nuevo horario no está disponible" });
         return;
       }
     }
 
-    const updatedReservation = await reservationModel.findByIdAndUpdate(id, updatedFields);
+    const updatedReservation = await Reservation.findByIdAndUpdate(
+      id, 
+      updatedFields, 
+      { new: true }
+    );
+    
     if (!updatedReservation) {
       res.status(404).json({ error: "Reserva no encontrada" });
       return;
@@ -125,22 +132,18 @@ export const removeReservation = async (req: Request, res: Response): Promise<vo
     const userId = (req as any).user.id;
 
     // Verificar que la reserva exista y pertenezca al usuario
-    const existingReservation = await reservationModel.findById(id);
+    const existingReservation = await Reservation.findById(id);
     if (!existingReservation) {
       res.status(404).json({ error: "Reserva no encontrada" });
       return;
     }
 
-    if (existingReservation.userId !== userId) {
+    if (existingReservation.userId.toString() !== userId) {
       res.status(403).json({ error: "No tienes permiso para eliminar esta reserva" });
       return;
     }
 
-    const success = await reservationModel.findByIdAndDelete(id);
-    if (!success) {
-      res.status(404).json({ error: "Reserva no encontrada" });
-      return;
-    }
+    await Reservation.findByIdAndDelete(id);
 
     res.status(204).send();
   } catch (error: any) {
@@ -153,7 +156,7 @@ export const removeReservation = async (req: Request, res: Response): Promise<vo
 export const getByDate = async (req: Request, res: Response): Promise<void> => {
   try {
     const { date } = req.params;
-    const reservations = await reservationModel.findByDate(date);
+    const reservations = await Reservation.findByDate(date);
     res.json(reservations);
   } catch (error: any) {
     console.error("Error obteniendo reservas por fecha:", error);
@@ -171,7 +174,7 @@ export const getAllReservations = async (req: Request, res: Response): Promise<v
       return;
     }
 
-    const reservations = await reservationModel.find();
+    const reservations = await Reservation.find().populate('userId', 'username name email');
     res.json(reservations);
   } catch (error: any) {
     console.error("Error obteniendo todas las reservas:", error);
