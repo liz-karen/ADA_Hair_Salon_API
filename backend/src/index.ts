@@ -4,6 +4,9 @@ import cors from "cors";
 import dotenv from "dotenv";
 import path from "path";
 
+// Importamos la conexión a MongoDB
+import { connectDatabase } from "./config/database";
+
 // Importamos middlewares personalizados
 import { errorHandler } from "./middleware/error-handler";
 
@@ -38,9 +41,23 @@ app.get("/", (_req, res) => {
 // Manejo de errores
 app.use(errorHandler);
 
-// Iniciamos el servidor
-app.listen(PORT, () => {
-  console.log(`��� Servidor corriendo en http://localhost:${PORT}`);
-  console.log(`��� Usando base de datos JSON temporal`);
-  console.log(`��� Configuración MongoDB lista para el futuro`);
-});
+// Iniciamos el servidor CON MongoDB Atlas
+const startServer = async () => {
+  try {
+    await connectDatabase();
+    
+    app.listen(PORT, () => {
+      console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
+      console.log(`📊 Conectado a MongoDB Atlas`); 
+      console.log(`💾 Datos guardándose en la nube (Atlas)`); 
+    });
+    
+  } catch (error) {
+    console.error('❌ No se pudo iniciar el servidor:', error);
+    process.exit(1);
+  }
+};
+
+
+startServer();
+

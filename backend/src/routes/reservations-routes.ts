@@ -13,15 +13,16 @@ import { validateReservation } from '../middleware/validate-middleware';
 
 const router = Router();
 
-// Rutas para usuarios autenticados
+// 🔹 Rutas para administradores primero
+router.get('/admin/all', authenticateToken, getAllReservations);
+router.get('/admin/date/:date', authenticateToken, getByDate);
+
+// 🔹 Rutas para usuarios autenticados
 router.get('/', authenticateToken, getAllForUser);
 router.get('/:id', authenticateToken, getById);
 router.post('/', authenticateToken, validateReservation, createReservation);
 router.put('/:id', authenticateToken, validateReservation, updateReservation);
 router.delete('/:id', authenticateToken, removeReservation);
 
-// Rutas para administradores
-router.get('/admin/all', authenticateToken, getAllReservations);
-router.get('/admin/date/:date', authenticateToken, getByDate);
-
 export default router;
+

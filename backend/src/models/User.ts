@@ -10,6 +10,7 @@ export interface IUser extends Document {
   role: string;
   createdAt: Date;
   updatedAt: Date;
+  toPublicJSON(): any
 }
 
 // Esquema de usuario
@@ -55,9 +56,6 @@ const userSchema = new Schema<IUser>({
   versionKey: false // No incluir __v
 });
 
-// Índices para mejorar el rendimiento
-userSchema.index({ username: 1 });
-userSchema.index({ email: 1 });
 
 // Método para obtener datos públicos del usuario
 userSchema.methods.toPublicJSON = function() {

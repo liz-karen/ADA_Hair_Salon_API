@@ -1,13 +1,19 @@
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+
+// Cargar variables de entorno
+dotenv.config();
 
 export const connectDatabase = async (): Promise<void> => {
   try {
-    const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/ada_hair_salon';
+    // Verificar que la variable de entorno existe
+    if (!process.env.MONGODB_URI) {
+      throw new Error('MONGODB_URI no estÃ¡ definida en las variables de entorno');
+    }
     
-    await mongoose.connect(mongoUri);
-    
+    await mongoose.connect(process.env.MONGODB_URI);
     console.log('âœ… Base de datos MongoDB conectada exitosamente');
-    console.log(`í³Š Base de datos: ${mongoose.connection.name}`);
+    console.log(`ðŸ“Š Base de datos: ${mongoose.connection.name}`);
   } catch (error) {
     console.error('âŒ Error conectando a MongoDB:', error);
     throw error;
@@ -26,6 +32,6 @@ mongoose.connection.on('disconnected', () => {
 // Cerrar conexiÃ³n cuando la aplicaciÃ³n se cierre
 process.on('SIGINT', async () => {
   await mongoose.connection.close();
-  console.log('í´Œ ConexiÃ³n a MongoDB cerrada');
+  console.log('ðŸ”Œ ConexiÃ³n a MongoDB cerrada');
   process.exit(0);
 });

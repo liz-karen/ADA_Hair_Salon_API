@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema, Types } from 'mongoose';
+import mongoose, { Document, Schema, Types, Model } from 'mongoose';
 
 // Interfaz para el documento de reserva
 export interface IReservation extends Document {
@@ -13,8 +13,15 @@ export interface IReservation extends Document {
   updatedAt: Date;
 }
 
+// Interfaz para los métodos estáticos 
+interface IReservationModel extends Model<IReservation> {
+  isTimeSlotAvailable(date: string, time: string): Promise<boolean>;
+  findByUserId(userId: string): Promise<IReservation[]>;
+  findByDate(date: string): Promise<IReservation[]>;
+}
+
 // Esquema de reserva
-const reservationSchema = new Schema<IReservation>({
+const reservationSchema = new Schema<IReservation, IReservationModel>({
   date: {
     type: String,
     required: [true, 'La fecha es requerida'],
@@ -51,20 +58,18 @@ const reservationSchema = new Schema<IReservation>({
     required: [true, 'El ID del usuario es requerido']
   }
 }, {
-  timestamps: true, // Crea automáticamente createdAt y updatedAt
-  versionKey: false // No incluir __v
+  timestamps: true,
+  versionKey: false
 });
 
 // Índices para mejorar el rendimiento
 reservationSchema.index({ userId: 1 });
 reservationSchema.index({ date: 1, time: 1 });
 reservationSchema.index({ status: 1 });
-
-// Índice compuesto para verificar disponibilidad
 reservationSchema.index({ date: 1, time: 1, status: 1 });
 
 // Método para verificar si un horario está disponible
-reservationSchema.statics.isTimeSlotAvailable = async function(date: string, time: string) {
+reservationSchema.statics.isTimeSlotAvailable = async function(date: string, time: string): Promise<boolean> {
   const existingReservation = await this.findOne({
     date,
     time,
@@ -74,14 +79,14 @@ reservationSchema.statics.isTimeSlotAvailable = async function(date: string, tim
 };
 
 // Método para obtener reservas por usuario
-reservationSchema.statics.findByUserId = function(userId: string) {
+reservationSchema.statics.findByUserId = function(userId: string): Promise<IReservation[]> {
   return this.find({ userId }).populate('userId', 'username email name');
 };
 
 // Método para obtener reservas por fecha
-reservationSchema.statics.findByDate = function(date: string) {
+reservationSchema.statics.findByDate = function(date: string): Promise<IReservation[]> {
   return this.find({ date }).populate('userId', 'username email name phone');
 };
 
-// Modelo de reserva
-export const Reservation = mongoose.model<IReservation>('Reservation', reservationSchema);
+// Modelo de reserva CON la interfaz de métodos estáticos
+export const Reservation = mongoose.model<IReservation, IReservationModel>('Reservation', reservationSchema);
