@@ -15,7 +15,7 @@ const seedData = async () => {
     // Limpiar datos existentes
     await User.deleteMany({});
     await Reservation.deleteMany({});
-    console.log('Ì∑π Datos existentes eliminados');
+    console.log('Datos existentes eliminados');
 
     // Crear usuario administrador
     const adminPassword = await bcrypt.hash('admin123', 10);
@@ -28,7 +28,7 @@ const seedData = async () => {
       role: 'admin'
     });
     await admin.save();
-    console.log('Ì±§ Usuario administrador creado');
+    console.log('Usuario administrador creado');
 
     // Crear usuario de prueba
     const userPassword = await bcrypt.hash('user123', 10);
@@ -41,7 +41,7 @@ const seedData = async () => {
       role: 'user'
     });
     await user.save();
-    console.log('Ì±§ Usuario de prueba creado');
+    console.log('Usuario de prueba creado');
 
     // Crear reservas de prueba
     const reservations = [
@@ -69,18 +69,18 @@ const seedData = async () => {
       const reservation = new Reservation(reservationData);
       await reservation.save();
     }
-    console.log('Ì≥Ö Reservas de prueba creadas');
+    console.log('Reservas de prueba creadas');
 
-    console.log('\nÌæâ Datos de prueba insertados exitosamente!');
-    console.log('\nÌ≥ã Credenciales de prueba:');
-    console.log('Ì±§ Admin - Usuario: admin, Contrase√±a: admin123');
-    console.log('Ì±§ Usuario - Usuario: valeria, Contrase√±a: user123');
+    console.log('\n Datos de prueba insertados exitosamente!');
+    console.log('\n Credenciales de prueba:');
+    console.log('Admin - Usuario: admin, Contrase√±a: admin123');
+    console.log('Usuario - Usuario: valeria, Contrase√±a: user123');
 
   } catch (error) {
     console.error('‚ùå Error insertando datos:', error);
   } finally {
     await mongoose.connection.close();
-    console.log('Ì¥å Conexi√≥n cerrada');
+    console.log('Conexi√≥n cerrada');
   }
 };
 

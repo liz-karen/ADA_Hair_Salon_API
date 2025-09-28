@@ -2,7 +2,7 @@
 
 API REST para el sistema de reservas del sal√≥n de belleza ADA Hair Salon, desarrollada con Node.js, Express, TypeScript y MongoDB.
 
-## Ì∫Ä Caracter√≠sticas
+## Caracter√≠sticas
 
 - **Autenticaci√≥n JWT**: Sistema seguro de login y registro
 - **Gesti√≥n de usuarios**: Registro, login, perfil y actualizaci√≥n
@@ -12,13 +12,13 @@ API REST para el sistema de reservas del sal√≥n de belleza ADA Hair Salon, desar
 - **Validaci√≥n de datos**: Validaci√≥n robusta con mensajes de error
 - **API RESTful**: Endpoints bien estructurados
 
-## Ì≥ã Requisitos
+## Requisitos
 
 - Node.js (v16 o superior)
 - MongoDB (local o MongoDB Atlas)
 - npm o yarn
 
-## Ìª†Ô∏è Instalaci√≥n
+## Instalaci√≥n
 
 1. **Clonar el repositorio**
 ```bash
@@ -46,7 +46,7 @@ cp .env.example .env
 - Asegurarse de que est√© corriendo en el puerto 27017
 
 ### Opci√≥n B: MongoDB Atlas (Recomendado para deploy)
-- Crear una cuenta en [MongoDB Atlas](https://www.mongodb.com/atlas)
+- Crear una cuenta en [MongoDB Atlas](https://www.mongodb.com/cloud/atlas/)
 - Crear un cluster gratuito
 - Obtener la cadena de conexi√≥n
 - Actualizar `MONGODB_URI` en el archivo `.env`
@@ -61,7 +61,7 @@ npm run build
 npm start
 ```
 
-## Ìº± Datos de prueba
+## Datos de prueba
 
 Para insertar datos de prueba (usuarios y reservas):
 
@@ -73,7 +73,7 @@ npm run seed
 - **Admin**: usuario: `admin`, contrase√±a: `admin123`
 - **Usuario**: usuario: `valeria`, contrase√±a: `user123`
 
-## Ì≥ö Endpoints de la API
+## Endpoints de la API
 
 ### Autenticaci√≥n
 - `POST /api/users/register` - Registro de usuario
@@ -92,7 +92,7 @@ npm run seed
 - `GET /api/reservations/admin/all` - Obtener todas las reservas (solo admin)
 - `GET /api/reservations/admin/date/:date` - Obtener reservas por fecha (solo admin)
 
-## Ì¥ß Estructura del proyecto
+## Estructura del proyecto
 
 ```
 ADA_Hair_Salon_API/
@@ -122,7 +122,7 @@ ADA_Hair_Salon_API/
 ‚îî‚îÄ‚îÄ package.json                   # Dependencias y scripts
 ```
 
-## Ì∑ÑÔ∏è Base de datos
+## Base de datos
 
 ### Colecciones MongoDB:
 
@@ -157,7 +157,7 @@ ADA_Hair_Salon_API/
 }
 ```
 
-## Ì¥ê Autenticaci√≥n
+## Autenticaci√≥n
 
 La API utiliza JWT (JSON Web Tokens) para la autenticaci√≥n. Incluye el token en el header:
 
@@ -165,11 +165,11 @@ La API utiliza JWT (JSON Web Tokens) para la autenticaci√≥n. Incluye el token en
 Authorization: Bearer <tu-token>
 ```
 
-## Ì∫Ä Deploy
+##  Deploy
 
 ### Heroku + MongoDB Atlas
-1. Crear cuenta en [Heroku](https://heroku.com)
-2. Crear cuenta en [MongoDB Atlas](https://mongodb.com/atlas)
+1. Crear cuenta en [Heroku](https://www.heroku.com/)
+2. Crear cuenta en [MongoDB Atlas](https://www.mongodb.com/cloud/atlas/)
 3. Configurar variables de entorno en Heroku
 4. Conectar repositorio y hacer deploy
 
@@ -180,7 +180,7 @@ JWT_SECRET=secreto_super_seguro_para_produccion
 PORT=3000
 ```
 
-## Ì≥ù Ejemplos de uso
+## Ejemplos de uso
 
 ### Registro de usuario
 ```bash
@@ -219,7 +219,7 @@ curl -X POST http://localhost:3000/api/reservations \
   }'
 ```
 
-## Ì¥ù Contribuci√≥n
+## Contribuci√≥n
 
 1. Fork el proyecto
 2. Crear una rama para tu feature (`git checkout -b feature/AmazingFeature`)
@@ -227,16 +227,14 @@ curl -X POST http://localhost:3000/api/reservations \
 4. Push a la rama (`git push origin feature/AmazingFeature`)
 5. Abrir un Pull Request
 
-## Ì≥Ñ Licencia
+## Autores
 
-Este proyecto est√° bajo la Licencia MIT. Ver el archivo `LICENSE` para m√°s detalles.
+- **Laura Marcelli** -  [TuGitHub](https://github.com/lauramarcelli)
+- **Liz Karen Quero** - [TuGitHub](https://github.com/liz-karen)
+- **Pamela Fumagalli**- [TuGitHub](https://github.com/Pame-85)
 
-## Ì±• Autores
+## Agradecimientos
 
-- **Tu Nombre** - *Desarrollo inicial* - [TuGitHub](https://github.com/tuusuario)
-
-## Ìπè Agradecimientos
-
-- ADA School por la oportunidad de aprendizaje
+- ADA ITW por la oportunidad de aprendizaje
 - Comunidad de desarrolladores de Node.js
 - Documentaci√≥n de MongoDB y Mongoose
