@@ -2,6 +2,7 @@ import * as bcrypt from "bcrypt";
 import * as jwt from "jsonwebtoken";
 import { Request, Response } from "express";
 import { User, IUser } from "../models/User";
+import { Reservation } from "../models/Reservation";
 
 // Registro de usuario
 export const register = async (req: Request, res: Response): Promise<void> => {
@@ -138,6 +139,26 @@ export const updateProfile = async (req: Request, res: Response): Promise<void> 
     });
   } catch (error: any) {
     console.error("Error actualizando perfil:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+};
+
+//Eliminar usuario
+export const deleteAccount = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userId = (req as any).user.id;
+    
+    await Reservation.deleteMany({ userId: userId });
+    
+    const deletedUser = await User.findByIdAndDelete(userId);
+    if (!deletedUser) {
+      res.status(404).json({ error: "Usuario no encontrado" });
+      return;
+    }
+
+    res.json({ message: "Cuenta eliminada exitosamente" });
+  } catch (error: any) {
+    console.error("Error eliminando cuenta:", error);
     res.status(500).json({ error: "Error interno del servidor" });
   }
 };
