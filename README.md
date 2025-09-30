@@ -167,10 +167,10 @@ Authorization: Bearer <tu-token>
 
 ##  Deploy
 
-### Heroku + MongoDB Atlas
-1. Crear cuenta en [Heroku](https://www.heroku.com/)
+### Render + MongoDB Atlas
+1. Crear cuenta en [Render](https://render.com/)
 2. Crear cuenta en [MongoDB Atlas](https://www.mongodb.com/cloud/atlas/)
-3. Configurar variables de entorno en Heroku
+3. Configurar variables de entorno en Render
 4. Conectar repositorio y hacer deploy
 
 ### Variables de entorno para producción:
