@@ -92,6 +92,11 @@ npm run seed
 - `GET /api/reservations/admin/all` - Obtener todas las reservas (solo admin)
 - `GET /api/reservations/admin/date/:date` - Obtener reservas por fecha (solo admin)
 
+### Postman Link
+https://web.postman.co/workspace/My-Workspace~0d37a0df-0a93-4608-836e-b71411736c40/folder/30098494-92083a77-7fdf-4525-9e59-558e0f5d4db7?action=share&source=copy-link&creator=30098494&ctx=documentation
+
+
+
 ## Estructura del proyecto
 
 ```
